@@ -2,11 +2,28 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-hot-toast";
 import axiosInstance from "../Helper/axiosInstance";
 
-const initialState = {
+// const initialState = {
+//   isLoggedIn: localStorage.getItem("isLoggedIn") || false,
+//   data: JSON.parse(localStorage.getItem("data")) || {},
+//   role: localStorage.getItem("role") || "",
+// }; 
+
+const initialState = { //gpt code above is original code
   isLoggedIn: localStorage.getItem("isLoggedIn") || false,
-  data: JSON.parse(localStorage.getItem("data")) || {},
+  // Check if "data" exists and is a valid JSON string before parsing
+  data: (() => {
+    const data = localStorage.getItem("data");
+    try {
+      return data ? JSON.parse(data) : {}; // Return empty object if not valid JSON
+    } catch (error) {
+      console.error("Error parsing JSON from localStorage:", error);
+      return {}; // Return empty object if parsing fails
+    }
+  })(),
   role: localStorage.getItem("role") || "",
-}; 
+};
+
+
 
 // function to handle signup
 export const createAccount = createAsyncThunk("/auth/signup", async (data) => {
